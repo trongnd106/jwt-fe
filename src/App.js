@@ -1,46 +1,46 @@
 import './App.scss';
-import Login from './components/Login/login';
 import Nav from './components/Navigation/Nav';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useState, useEffect } from 'react';
+import _ from 'lodash';
+import AppRoutes from './routes/AppRoutes';
+
 
 function App() {
+  const [account, setAccount] = useState({})
+
+  useEffect(() => {
+    let session = sessionStorage.getItem("account")
+    if (session) {
+      setAccount(JSON.parse(session))
+    }
+  }, [])
   return (
-    <Router>
-      <div className='app-container'>
-      {/* <Nav /> */}
-      <Switch>
-          <Route path="/news">
-            news
-          </Route>
+    <>
+       <Router>
+        <div className='app-header'>
+           <Nav />
+        </div>      
 
-          <Route path="/about">
-            about
-          </Route>
+        <div className='app-container'>                
+          <AppRoutes/>
+        </div>
+      </Router>
 
-          <Route path="/contact">
-            contact
-          </Route>
-
-          <Route path="/login">
-            <Login/>
-          </Route>
-
-          <Route path="/" exact>
-            home
-          </Route>
-
-          <Route path="*">
-            404 not found
-          </Route>
-        </Switch> 
-    </div>
-    </Router>
-    
+      <ToastContainer
+          position="top-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+      />
+    </>    
   );
 }
 
