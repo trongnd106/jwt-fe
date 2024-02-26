@@ -1,9 +1,9 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useEffect, useState } from 'react';
-import { fetchGroup } from '../../services/userService';
+import { fetchGroup, createNewUser } from '../../services/userService';
 import { toast } from 'react-toastify';
-import _ from 'lodash';
+import _, { create } from 'lodash';
 
 const ModalUser = (props) => {
     const defaultUserData = {
@@ -40,6 +40,10 @@ const ModalUser = (props) => {
         let response = await fetchGroup();
         if(response && response.data && response.data.EC === 0){
             getUserGroups(response.data.DT)
+            if(response.data.DT && response.data.DT.length > 0){
+                let groups = response.data.DT
+                setUserData({...userData, group: groups[0].id})
+            }
         } else {
             toast.error(response.data.EM);
         }
@@ -70,13 +74,22 @@ const ModalUser = (props) => {
         return check;
     }
 
-    const handleConfirmUser = () => {
-        checkValidateInputs()
+    const handleConfirmUser = async () => {
+        let check = checkValidateInputs()
+        if(check === true){
+            let res = await createNewUser({... userData, groupId: userData['group']})
+            if(res.data && res.data.EC === 0){
+                props.onHide()
+                setUserData({...defaultUserData, group: userGroups[0].id})
+            } else {
+                toast.error('Error create user')
+            }
+        }
     }
 
     return (
         <>
-            <Modal size="lg" show={true} className='modal-user'>
+            <Modal size="lg" show={props.show} className='modal-user' onHide={props.onHide}>
                 <Modal.Header closeButton>
                     <Modal.Title id="contained-modal-title-vcenter">
                         <span>{props.title}</span>
