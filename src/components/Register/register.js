@@ -70,9 +70,7 @@ const Register = (props) => {
         // toast.success("Create new account successfuly!");     //error,info
 
         if(check === true){
-            let response = await registerNewUser(email, phone, username, password)
-            let severData = response.data;
-
+            let severData = await registerNewUser(email, phone, username, password)
             if (+severData.EC === 0){
                 toast.success(severData.EM);
                 history.push("/login");
