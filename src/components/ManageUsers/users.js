@@ -1,5 +1,5 @@
 import './users.scss';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { fetchAllUsers, deleteUser } from '../../services/userService';
 import ReactPaginate from 'react-paginate';
 import { toast } from 'react-toastify';
@@ -22,7 +22,7 @@ const Users = (props) => {
     const [dataModalUser, setDataModalUser] = useState({})
 
     useEffect(() => {
-        fetchUsers();
+        fetchUsers()
     }, [currentPage]);
 
     const fetchUsers = async () => {
